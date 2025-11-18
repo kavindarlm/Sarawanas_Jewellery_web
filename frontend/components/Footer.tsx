@@ -69,11 +69,11 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-white font-medium mb-1">Phone</p>
-                  <p><a href="tel:+94112345678" className="hover:text-amber-500 transition">+94 11 234 5678</a></p>
+                  <p><a href="tel:+94112345678" className="hover:text-amber-500 transition">+94 11 111 1111 </a></p>
                 </div>
                 <div>
                   <p className="text-white font-medium mb-1">Email</p>
-                  <p><a href="mailto:info@sarawanasjewellery.lk" className="hover:text-amber-500 transition">info@sarawanasjewellery.lk</a></p>
+                  <p><a href="mailto:sarawanasjewellery@gmail.com" className="hover:text-amber-500 transition">sarawanasjewellery@gmail.com</a></p>
                 </div>
               </div>
             </div>

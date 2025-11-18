@@ -27,6 +27,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: '5.imimg.com',
       },
+      {
+        protocol: 'https',
+        hostname: 't3.ftcdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.malabargoldanddiamonds.com',
+      },
     ],
   },
 }

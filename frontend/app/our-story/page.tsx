@@ -28,7 +28,7 @@ export default function OurStory() {
       </section>
 
       {/* Main Story Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white font-serif">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -99,7 +99,7 @@ export default function OurStory() {
       </section>
 
       {/* Core Values Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white font-serif">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6 tracking-wide">
@@ -257,7 +257,7 @@ export default function OurStory() {
       </section>
 
       {/* History Timeline Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white font-serif">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light text-white mb-6 tracking-wide">
@@ -288,7 +288,7 @@ export default function OurStory() {
                 <h3 className="text-2xl md:text-3xl font-light text-white mb-6 tracking-wide">
                   Timeless Craftsmanship Since 1995
                 </h3>
-                <p className="text-gray-300 leading-relaxed mb-6">
+                <p className="text-gray-300 leading-relaxed mb-6 text-xl md:text-lg">
                   Founded in 1995 by Mr. Rata Lokuge Sarath, Sarawanas Jewellery
                   began as a small home-based workshop where passion, skill, and
                   dedication shaped every piece by hand. What started as a
@@ -343,7 +343,7 @@ export default function OurStory() {
                 <h3 className="text-2xl md:text-3xl font-light text-white mb-6 tracking-wide">
                   Expansion & Excellence
                 </h3>
-                <p className="text-gray-300 leading-relaxed mb-6">
+                <p className="text-gray-300 leading-relaxed mb-6 text-xl md:text-lg">
                   By the year 2000, Sarawanas Jewellery expanded from its early
                   location in Matara and established a dedicated jewellery shop
                   in Neluwa, marking a major milestone in its growth. With
@@ -383,7 +383,7 @@ export default function OurStory() {
                 <h3 className="text-2xl md:text-3xl font-light text-white mb-6 tracking-wide">
                   Where Tradition Meets Technology
                 </h3>
-                <p className="text-gray-300 leading-relaxed mb-6">
+                <p className="text-gray-300 leading-relaxed mb-6 text-xl md:text-lg">
                   Blending age-old techniques with cutting-edge technology,
                   Sarawana's Jewellery delivers jewellery that embodies both
                   timeless elegance and modern design. With skilled artisans and
@@ -425,7 +425,7 @@ export default function OurStory() {
       </section>
 
       {/* Commitment Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white font-serif">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-8 tracking-wide">
             Our Commitment to You
