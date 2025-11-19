@@ -1,6 +1,32 @@
+"use client";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export default function LatestCollections() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   const collections = [
     {
       title: "Bridal Splendor",
@@ -21,12 +47,18 @@ export default function LatestCollections() {
 
   return (
     <section className="py-20 px-4 md:px-8 lg:px-12 bg-white">
-      <div className="container mx-auto">
-        <div className="text-center mb-4">
+      <div ref={sectionRef} className="container mx-auto">
+        <div className={`text-center mb-4 transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           <span className="text-sm tracking-[0.3em] text-amber-600 font-semibold">SOPHISTICATION & PRESTIGE</span>
         </div>
-        <h2 className="text-4xl md:text-5xl font-serif text-center mb-4 text-blue-800">NEWEST ARRIVALS</h2>
-        <div className="flex justify-center mb-12">
+        <h2 className={`text-4xl md:text-5xl font-serif text-center mb-4 text-blue-800 transition-all duration-700 delay-100 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>NEWEST ARRIVALS</h2>
+        <div className={`flex justify-center mb-12 transition-all duration-700 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           <div className="h-1 w-32 bg-amber-600"></div>
         </div>
 
@@ -35,7 +67,10 @@ export default function LatestCollections() {
             <Link 
               key={index} 
               href="/jewellery" 
-              className="group relative overflow-hidden rounded-lg shadow-2xl h-96"
+              className={`group relative overflow-hidden rounded-lg shadow-2xl h-96 transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              style={{ transitionDelay: `${300 + index * 150}ms` }}
             >
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                    style={{backgroundImage: `url(${collection.image})`}}></div>
@@ -48,7 +83,9 @@ export default function LatestCollections() {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className={`text-center transition-all duration-700 delay-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           <p className="text-lg text-gray-700 mb-4 font-light">ADORNMENTS FOR LIFE'S CELEBRATIONS</p>
           <div className="flex justify-center">
             <div className="h-1 w-32 bg-amber-600"></div>

@@ -2,36 +2,49 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import axios from "axios";
 
 const sampleProducts = [
-  { id: 1, name: "Diamond Solitaire Ring", category: "Rings", imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800" },
-  { id: 2, name: "Gold Chain Necklace", category: "Necklaces", imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800" },
-  { id: 3, name: "Pearl Drop Earrings", category: "Earrings", imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800" },
-  { id: 4, name: "Gold Bangles Set", category: "Bangles", imageUrl: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800" },
-  { id: 5, name: "Ruby Pendant", category: "Pendants", imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800" },
-  { id: 6, name: "Platinum Chain", category: "Chains", imageUrl: "https://images.unsplash.com/photo-1601821765780-754fa98637c1?w=800" },
-  { id: 7, name: "Emerald Ring", category: "Rings", imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800" },
-  { id: 8, name: "Diamond Necklace", category: "Necklaces", imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800" },
-  { id: 9, name: "Gold Hoop Earrings", category: "Earrings", imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800" },
-  { id: 10, name: "Silver Bangles", category: "Bangles", imageUrl: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800" },
-  { id: 11, name: "Sapphire Pendant", category: "Pendants", imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800" },
-  { id: 12, name: "Rose Gold Chain", category: "Chains", imageUrl: "https://images.unsplash.com/photo-1601821765780-754fa98637c1?w=800" }
+  { id: 1, productId: "T5993", name: "Diamond Solitaire Ring", category: "Rings", imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800", price: "LKR 125,000" },
+  { id: 2, productId: "F138", name: "Gold Chain Necklace", category: "Necklaces", imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800", price: "LKR 185,000" },
+  { id: 3, productId: "F200", name: "Pearl Drop Earrings", category: "Earrings", imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800", price: "LKR 65,000" },
+  { id: 4, productId: "F2078", name: "Gold Bangles Set", category: "Bangles", imageUrl: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800", price: "LKR 225,000" },
+  { id: 5, productId: "F2205", name: "Ruby Pendant", category: "Pendants", imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800", price: "LKR 95,000" },
+  { id: 6, productId: "F2207", name: "Platinum Chain", category: "Chains", imageUrl: "https://images.unsplash.com/photo-1601821765780-754fa98637c1?w=800", price: "LKR 155,000" },
+  { id: 7, productId: "F2878", name: "Emerald Ring", category: "Rings", imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800", price: "LKR 145,000" },
+  { id: 8, productId: "F3111", name: "Diamond Necklace", category: "Necklaces", imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800", price: "LKR 275,000" },
+  { id: 9, productId: "F3324", name: "Gold Hoop Earrings", category: "Earrings", imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800", price: "LKR 85,000" },
+  { id: 10, productId: "F3538", name: "Silver Bangles", category: "Bangles", imageUrl: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800", price: "LKR 135,000" },
+  { id: 11, productId: "F3568", name: "Sapphire Pendant", category: "Pendants", imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800", price: "LKR 115,000" },
+  { id: 12, productId: "F3618", name: "Rose Gold Chain", category: "Chains", imageUrl: "https://images.unsplash.com/photo-1601821765780-754fa98637c1?w=800", price: "LKR 165,000" }
 ];
 
 export default function ProductPage() {
   const params = useParams();
-  const productId = parseInt(params.id as string);
-  const product = sampleProducts.find(p => p.id === productId);
-  
-  const [selectedImage, setSelectedImage] = useState(product?.imageUrl || "");
+  const [product, setProduct] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [activeTab, setActiveTab] = useState("description");
+  const [quantity, setQuantity] = useState(1);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
-    if (product) {
-      setSelectedImage(product.imageUrl);
-    }
-  }, [product]);
+    // Try to fetch from backend
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/${params.id}`)
+      .then(res => {
+        setProduct(res.data);
+        // Check if imageUrl is a full URL (starts with http) or relative path
+        const imageUrl = res.data.imageUrl;
+        setSelectedImage(imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${imageUrl}`) : "");
+      })
+      .catch(err => {
+        // Fallback to sample data
+        const sampleProduct = sampleProducts.find(p => p.id.toString() === params.id || p.productId === params.id);
+        if (sampleProduct) {
+          setProduct(sampleProduct);
+          setSelectedImage(sampleProduct.imageUrl);
+        }
+      });
+  }, [params.id]);
 
   if (!product) {
     return (
@@ -58,10 +71,7 @@ export default function ProductPage() {
     .slice(0, 4);
 
   return (
-    <>
-      <Header />
-      
-      <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
         {/* Breadcrumb */}
         <div className="bg-gray-50 border-b border-gray-200">
           <div className="container mx-auto px-4 md:px-8 lg:px-12 py-4">
@@ -121,24 +131,6 @@ export default function ProductPage() {
                     </p>
                   </div>
                 </div>
-
-                {/* Returns & Delivery */}
-                <div className="border-t border-gray-200 pt-8">
-                  <h2 className="text-lg font-medium text-gray-900 mb-4">Returns & delivery</h2>
-                  <div className="text-sm text-gray-700 leading-relaxed space-y-3">
-                    <p>
-                      We offer secure and insured delivery to ensure your jewellery arrives safely. Our packaging is designed 
-                      to protect your precious items during transit.
-                    </p>
-                    <p>
-                      For returns and exchanges, please contact our customer service team. We are committed to ensuring your 
-                      complete satisfaction with every purchase.
-                    </p>
-                    <p>
-                      For more information about our delivery options and return policy, please visit our store or contact us directly.
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -172,8 +164,5 @@ export default function ProductPage() {
           )}
         </div>
       </main>
-
-      <Footer />
-    </>
   );
 }

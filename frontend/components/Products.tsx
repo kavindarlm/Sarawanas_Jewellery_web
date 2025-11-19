@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Link from "next/link";
 
@@ -31,10 +31,16 @@ export default function Products() {
   const [products, setProducts] = useState(sampleProducts);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredProducts, setFilteredProducts] = useState(sampleProducts);
+  const [isCategoriesVisible, setIsCategoriesVisible] = useState(false);
+  const [isShopVisible, setIsShopVisible] = useState(false);
+  const [isCtaVisible, setIsCtaVisible] = useState(false);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const shopRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Try to fetch from backend, but use sample data if unavailable
-    axios.get("http://localhost:3001/api/products")
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`)
       .then(res => {
         if (res.data && res.data.length > 0) {
           setProducts(res.data);
@@ -55,23 +61,61 @@ export default function Products() {
     }
   }, [selectedCategory, products]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === categoriesRef.current && entry.isIntersecting) {
+            setIsCategoriesVisible(true);
+          }
+          if (entry.target === shopRef.current && entry.isIntersecting) {
+            setIsShopVisible(true);
+          }
+          if (entry.target === ctaRef.current && entry.isIntersecting) {
+            setIsCtaVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (categoriesRef.current) observer.observe(categoriesRef.current);
+    if (shopRef.current) observer.observe(shopRef.current);
+    if (ctaRef.current) observer.observe(ctaRef.current);
+
+    return () => {
+      if (categoriesRef.current) observer.unobserve(categoriesRef.current);
+      if (shopRef.current) observer.unobserve(shopRef.current);
+      if (ctaRef.current) observer.unobserve(ctaRef.current);
+    };
+  }, []);
+
   return (
     <>
       {/* Categories Section */}
       <section className="py-24 px-4 md:px-8 lg:px-12 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-4">
+        <div ref={categoriesRef} className="container mx-auto">
+          <div className={`text-center mb-4 transition-all duration-700 ${
+            isCategoriesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <span className="text-xs tracking-[0.4em] text-amber-600 font-semibold">OUR PRODUCTS</span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-center mb-6 text-blue-800">OUR JEWELLERY</h2>
-          <div className="flex justify-center mb-16">
+          <h2 className={`text-4xl md:text-5xl lg:text-6xl font-serif text-center mb-6 text-blue-800 transition-all duration-700 delay-100 ${
+            isCategoriesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>OUR JEWELLERY</h2>
+          <div className={`flex justify-center mb-16 transition-all duration-700 delay-200 ${
+            isCategoriesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <div className="h-1 w-32 bg-amber-600"></div>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <Link key={category.name} href={`/jewellery/${category.name.toLowerCase()}`} 
-                    className="group cursor-pointer text-center">
+                    className={`group cursor-pointer text-center transition-all duration-700 ${
+                      isCategoriesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: `${300 + index * 100}ms` }}>
                 <div className="overflow-hidden rounded-sm mb-4 shadow-xl aspect-square">
                   <img 
                     src={category.image} 
@@ -90,18 +134,26 @@ export default function Products() {
 
       {/* Shop Section */}
       <section className="py-20 px-4 md:px-8 lg:px-12 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-4">
+        <div ref={shopRef} className="container mx-auto">
+          <div className={`text-center mb-4 transition-all duration-700 ${
+            isShopVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <span className="text-xs tracking-[0.4em] text-amber-600 font-semibold">ELEGANCE BEGINS HERE</span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-center mb-6 text-blue-800">SHOP</h2>
-          <div className="flex justify-center mb-16">
+          <h2 className={`text-4xl md:text-5xl lg:text-6xl font-serif text-center mb-6 text-blue-800 transition-all duration-700 delay-100 ${
+            isShopVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>SHOP</h2>
+          <div className={`flex justify-center mb-16 transition-all duration-700 delay-200 ${
+            isShopVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <div className="h-1 w-32 bg-amber-600"></div>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar Filter */}
-            <div className="lg:w-1/4">
+            <div className={`lg:w-1/4 transition-all duration-700 delay-300 ${
+              isShopVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}>
               <div className="bg-white p-6 rounded-sm shadow-sm sticky top-24">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200">
                   PRODUCT CATEGORIES
@@ -138,7 +190,9 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="lg:w-3/4">
+            <div className={`lg:w-3/4 transition-all duration-700 delay-400 ${
+              isShopVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
               <div className="mb-6 flex justify-between items-center">
                 <p className="text-sm text-gray-600">
                   Showing {filteredProducts.length} result{filteredProducts.length !== 1 ? 's' : ''}
@@ -192,10 +246,12 @@ export default function Products() {
 
       {/* Call to Action */}
       <section className="py-16 md:py-20 px-4 md:px-8 lg:px-12 bg-gray-100">
-        <div className="container mx-auto">
+        <div ref={ctaRef} className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left - Product Image */}
-            <div className="relative">
+            <div className={`relative transition-all duration-700 ${
+              isCtaVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}>
               <img 
                 src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800" 
                 alt="Gold Bangles"
@@ -204,7 +260,9 @@ export default function Products() {
             </div>
 
             {/* Right - Content */}
-            <div className="text-left lg:pr-8">
+            <div className={`text-left lg:pr-8 transition-all duration-700 delay-200 ${
+              isCtaVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
               <div className="mb-4">
                 <span className="text-xs tracking-[0.3em] text-amber-600 font-semibold">VISIT US</span>
               </div>

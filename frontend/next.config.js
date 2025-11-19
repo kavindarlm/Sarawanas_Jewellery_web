@@ -35,6 +35,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'static.malabargoldanddiamonds.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'jlkxcokofkegzaxkdreq.supabase.co',
+      },
     ],
   },
 }
