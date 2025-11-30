@@ -16,10 +16,10 @@ export default function Header() {
 
   return (
     <>
-      {/* Gold Rate Banner */}
+      {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-amber-700 to-amber-500 text-white py-2.5 text-center text-xs">
         <div className="container mx-auto px-4">
-          <span className="font-semibold tracking-wide">GOLD RATE  |  DATE: {new Date().toLocaleDateString('en-GB')}  |  22KT LKR 314,500</span>
+          <span className="font-semibold tracking-wide">Welcome to Sarawanas Jewellery  |  Crafting Elegance Since Generations</span>
         </div>
       </div>
       
