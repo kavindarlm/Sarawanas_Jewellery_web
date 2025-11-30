@@ -1,35 +1,43 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
-import express, { Request, Response } from 'express';
+import * as express from 'express';
 
-const server = express();
-let app: any;
+let cachedApp: INestApplication;
 
-async function createServer() {
-  if (!app) {
-    app = await NestFactory.create(
-      AppModule,
-      new ExpressAdapter(server),
-      { logger: ['error', 'warn', 'log'] }
-    );
+async function bootstrap() {
+  if (!cachedApp) {
+    const expressApp = express();
+    const adapter = new ExpressAdapter(expressApp);
     
-    app.enableCors({
-      origin: [
-        'http://localhost:3000',
-        'https://*.vercel.app',
-        /\.vercel\.app$/,
-      ],
+    cachedApp = await NestFactory.create(AppModule, adapter, {
+      logger: ['error', 'warn'],
+    });
+    
+    cachedApp.enableCors({
+      origin: true,
       credentials: true,
     });
     
-    app.setGlobalPrefix('api');
-    await app.init();
+    cachedApp.setGlobalPrefix('api');
+    await cachedApp.init();
+    
+    return expressApp;
   }
-  return app;
+  
+  return cachedApp.getHttpAdapter().getInstance();
 }
 
-export default async (req: Request, res: Response) => {
-  await createServer();
-  server(req, res);
+export default async (req: express.Request, res: express.Response) => {
+  try {
+    const app = await bootstrap();
+    app(req, res);
+  } catch (error) {
+    console.error('Error in serverless function:', error);
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message: error.message 
+    });
+  }
 };
