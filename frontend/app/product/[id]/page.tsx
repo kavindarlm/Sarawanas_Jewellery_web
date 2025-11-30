@@ -26,8 +26,10 @@ export default function ProductPage() {
   const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     // Try to fetch from backend
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/${params.id}`)
       .then(res => {
@@ -35,6 +37,7 @@ export default function ProductPage() {
         // Check if imageUrl is a full URL (starts with http) or relative path
         const imageUrl = res.data.imageUrl;
         setSelectedImage(imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${imageUrl}`) : "");
+        setIsLoading(false);
       })
       .catch(err => {
         // Fallback to sample data
@@ -43,8 +46,23 @@ export default function ProductPage() {
           setProduct(sampleProduct);
           setSelectedImage(sampleProduct.imageUrl);
         }
+        setIsLoading(false);
       });
   }, [params.id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <svg className="animate-spin h-16 w-16 text-amber-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="text-gray-600 text-lg font-serif">Loading product details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
