@@ -2,7 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log'],
+  });
   
   app.enableCors({
     origin: [
@@ -18,8 +20,13 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   
   const port = process.env.PORT || 3001;
-  await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
+  await app.listen(port, '0.0.0.0');
+  console.log(`✅ Application is running on port: ${port}`);
+  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✅ Database configured: ${process.env.DATABASE_URL ? 'Yes (PostgreSQL)' : 'Local MySQL'}`);
 }
 
-bootstrap();
+bootstrap().catch(err => {
+  console.error('❌ Failed to start application:', err);
+  process.exit(1);
+});
