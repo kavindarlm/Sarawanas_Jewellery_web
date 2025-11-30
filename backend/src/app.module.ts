@@ -17,8 +17,12 @@ import { UsersModule } from './users/users.module';
       password: process.env.DATABASE_URL ? undefined : (process.env.DB_PASSWORD || 'root'),
       database: process.env.DATABASE_URL ? undefined : (process.env.DB_NAME || 'sarawanas_jewellery'),
       autoLoadEntities: true,
-      synchronize: false, // IMPORTANT: Set to false in production
+      synchronize: false,
       ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+      extra: process.env.DATABASE_URL ? {
+        // Force IPv4 to avoid IPv6 connection issues
+        family: 4,
+      } : {},
     }),
     ProductsModule,
     AuthModule,
