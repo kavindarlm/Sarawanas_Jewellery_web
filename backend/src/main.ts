@@ -8,7 +8,9 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://*.vercel.app',
+      'https://*.railway.app',
       /\.vercel\.app$/,
+      /\.railway\.app$/,
     ],
     credentials: true,
   });
